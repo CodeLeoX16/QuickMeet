@@ -1,0 +1,590 @@
+.landingPageContainer {
+  width: 100vw;
+  height: 100vh;
+  background: url("/public/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+}
+
+.landingPageContainer nav {
+  padding-inline: 1.2rem;
+  padding-block: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.landingPageContainer nav h2 {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.landingPageContainer nav .navlist {
+  display: flex;
+  gap: 1.6rem;
+  cursor: pointer;
+
+}
+
+.landingMainContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 3rem;
+  height: 80vh;
+  align-items: center;
+}
+
+.landingMainContainer>div:nth-child(1) {
+  font-size: 2.2rem;
+}
+
+.landingMainContainer>div:nth-child(1) div[role='button'] {
+  background: #D97500;
+  width: fit-content;
+  padding: 1rem;
+  border-radius: 20px;
+  margin-top: 1.9rem;
+}
+
+.landingMainContainer>div:nth-child(1) div[role='button'] a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.7rem;
+}
+
+.landingMainContainer>div:nth-child(2) img {
+  height: 70vh;
+  width: auto;
+}
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 20px;
+  text-align: center;
+
+}
+.meetContainer {
+  display: flex;
+  padding-inline: 20px;
+  height: 80vh;
+  gap: 10vw;
+  justify-content: center;
+}
+
+
+
+.leftPanel {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+}
+
+.rightPanel {
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel > img {
+  width: 30vw;
+  height: auto;
+  border-radius: 20px;
+}
+
+
+
+
+
+/* ---------------- */
+/* Quick Meet Website Name Style */
+
+ .quickMeetTitle, .navHeader h2 {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  color: #fff;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0;
+  text-transform: capitalize;
+  text-shadow: 0 2px 18px #6f4ff2, 0 1px 8px #2b185e;
+  background: linear-gradient(90deg, #fff 50%, #ff9839 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+          background-clip: text;
+         /* // text-fill-color: transparent; */
+  border: none;
+  display: inline-block;
+}
+
+
+
+.landingPageContainer {
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(ellipse at 60% 10%, #2b185e 0%, #181636 70%, #13122b 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glowing planet/circle shapes */
+.landingPageContainer::before,
+.landingPageContainer::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+.landingPageContainer::before {
+  width: 48vw;
+  height: 48vw;
+  top: 0;
+  right: 0;
+  background: radial-gradient(circle, #6f4ff2 60%, transparent 100%);
+  filter: blur(2px);
+  opacity: 0.65;
+  transform: translate(18%, -18%);
+}
+.landingPageContainer::after {
+  width: 32vw;
+  height: 32vw;
+  bottom: -8vw;
+  left: -8vw;
+  background: radial-gradient(circle, #3a1a71 60%, transparent 100%);
+  filter: blur(2px);
+  opacity: 0.5;
+}
+
+/* Subtle stars background */
+.landingPageContainer .star-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.landingPageContainer .star-bg canvas,
+.landingPageContainer .star-bg img {
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.2;
+}
+
+/* Main content above background */
+nav,
+.landingMainContainer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Button style matching reference */
+.landingMainContainer [role='button'] {
+  background: #ff9839;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.4rem;
+  border-radius: 18px;
+  padding: 18px 40px;
+  border: none;
+  box-shadow: 0 6px 32px rgba(255,152,57,.09);
+  transition: background 0.2s, color 0.2s;
+}
+
+.landingMainContainer [role='button']:hover {
+  background: #ffad52;
+  color: #fff;
+}
+
+/* Headline style */
+.landingMainContainer h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  margin-bottom: 0.6em;
+}
+.landingMainContainer h1 span {
+  color: #ff9839;
+  font-weight: 900;
+}
+.landingMainContainer p {
+  font-size: 1.6rem;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Navbar words - white and spaced */
+nav {
+  background: none;
+}
+.navHeader h2 {
+  color: #fff;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0;
+}
+.navlist {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.navlist p, .navlist div p {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s;
+}
+.navlist p:hover, .navlist div p:hover {
+  color: #ff9839;
+}
+
+
+
+/* ---home page---- */
+/* --- NAVBAR --- */
+.navBar {
+  background: linear-gradient(90deg, #22184b 0%, #181636 70%, #13122b 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 48px;
+  box-shadow: 0 2px 18px rgba(44,62,80,.20);
+  position: relative;
+  z-index: 10;
+}
+
+.navBar h2 {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 2px;
+  margin: 0;
+  text-shadow: 0 2px 18px #6f4ff2, 0 1px 8px #2b185e;
+  background: linear-gradient(90deg, #fff 60%, #ff9839 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+  display: inline-block;
+}
+
+.navBar > div:last-child {
+  gap: 22px;
+}
+
+.navBar p,
+.navBar button {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 1.12rem;
+  color: #fff;
+  background: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: color 0.18s;
+  margin: 0 8px;
+}
+
+.navBar p:hover,
+.navBar button:hover {
+  color: #ff9839;
+}
+
+.navBar .MuiIconButton-root {
+  color: #ff9839;
+  background: #fff1e5;
+  border-radius: 50%;
+  margin-right: 4px;
+  transition: background 0.18s, color 0.18s;
+}
+.navBar .MuiIconButton-root:hover {
+  background: #ff9839;
+  color: #fff;
+}
+
+/* --- MAIN MEET CONTAINER --- */
+.meetContainer {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  min-height: calc(100vh - 90px);
+  background: radial-gradient(ellipse at 60% 10%, #22184b 0%, #181636 70%, #13122b 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glowing planet/circle shapes */
+.meetContainer::before,
+.meetContainer::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+.meetContainer::before {
+  width: 50vw;
+  height: 50vw;
+  top: -14vw;
+  right: -20vw;
+  background: radial-gradient(circle, #6f4ff2 60%, transparent 100%);
+  filter: blur(2px);
+  opacity: 0.45;
+}
+.meetContainer::after {
+  width: 36vw;
+  height: 36vw;
+  bottom: -10vw;
+  left: -14vw;
+  background: radial-gradient(circle, #3a1a71 60%, transparent 100%);
+  filter: blur(2px);
+  opacity: 0.35;
+}
+
+/* Left Panel */
+.leftPanel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 64px 56px;
+  min-width: 320px;
+  z-index: 1;
+}
+
+.leftPanel h2 {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 36px;
+  line-height: 1.15;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 18px #22184b;
+}
+
+.leftPanel .MuiTextField-root {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.leftPanel .MuiButton-contained {
+  background: linear-gradient(90deg,#ff9839 60%, #ffad52 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.15rem;
+  border-radius: 8px;
+  padding: 8px 32px;
+  box-shadow: 0 6px 16px rgba(255,152,57,.14);
+  transition: background 0.18s;
+}
+.leftPanel .MuiButton-contained:hover {
+  background: linear-gradient(90deg,#ffad52 60%, #ff9839 100%);
+}
+
+/* Right Panel */
+.rightPanel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  min-width: 320px;
+  position: relative;
+  z-index: 1;
+}
+.rightPanel img {
+  max-width: 340px;
+  width: 70%;
+  border-radius: 32px;
+  box-shadow: 0 8px 38px #22184b88;
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+.rightPanel img:hover {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .meetContainer {
+    flex-direction: column;
+    padding: 0;
+    min-height: auto;
+  }
+  .leftPanel, .rightPanel {
+    padding: 38px 18px;
+    min-width: 0;
+  }
+  .leftPanel h2 {
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+  }
+  .rightPanel img {
+    max-width: 220px;
+  }
+}
+
+
+/* HISTORY PAGE STYLING */
+.historyPageContainer {
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(ellipse at 60% 10%, #22184b 0%, #181636 70%, #13122b 100%);
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Home button styling for visibility and left-corner placement */
+.historyNavBtn {
+  position: fixed;
+  top: 32px;
+  left: 32px;
+  background: #ff9839;
+  color: #fff;
+  box-shadow: 0 2px 12px #22184b55;
+  border-radius: 50%;
+  z-index: 100;
+  width: 56px;
+  height: 56px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  font-size: 2rem;
+  border: none;
+}
+
+.historyNavBtn:hover {
+  background: #fff;
+  color: #ff9839;
+  box-shadow: 0 4px 24px #ff983988;
+}
+
+/* History Title */
+.historyTitle {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  color: #fff;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-top: 80px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 18px #6f4ff2, 0 1px 8px #2b185e;
+  text-align: center;
+}
+
+/* Cards grid */
+.historyCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* Card styling */
+.MuiCard-root.historyCard {
+  min-width: 280px;
+  max-width: 340px;
+  background: linear-gradient(120deg,#22184b 75%,#241851 100%);
+  color: #fff;
+  border-radius: 28px;
+  box-shadow: 0 8px 38px #22184b88;
+  padding: 18px 0;
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.MuiCard-root.historyCard:hover {
+  transform: scale(1.04) translateY(-4px);
+  box-shadow: 0 16px 56px #ff983988;
+  background: linear-gradient(120deg,#ff9839 60%,#22184b 100%);
+}
+
+/* Card content */
+.MuiCardContent-root {
+  padding-bottom: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Meeting Code styling */
+.historyCode {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ff9839;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+/* Meeting Date styling */
+.historyDate {
+  font-size: 1.05rem;
+  color: #fff;
+  opacity: 0.85;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+/* No meetings found message */
+.noMeetingsMsg {
+  color: #fff;
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 2rem;
+  margin-top: 120px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .historyCards {
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    margin-top: 20px;
+    max-width: 95vw;
+  }
+  .historyNavBtn {
+    left: 12px;
+    top: 12px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.4rem;
+  }
+  .historyTitle {
+    font-size: 1.5rem;
+    margin-top: 64px;
+  }
+}
+/* Remove home button styling */
+.historyNavBtn {
+  display: none !important;
+}
+
+
+/* ----meetingvideo----- */
