@@ -1,3 +1,4 @@
+// ...existing code...
 import React, { useEffect, useRef, useState } from 'react'
 import io from "socket.io-client";
 import { Badge, IconButton, TextField, Avatar } from '@mui/material';
@@ -30,6 +31,11 @@ export default function VideoMeetComponent() {
     let socketIdRef = useRef();
 
     let localVideoref = useRef();
+
+    // presenter overlay refs/state
+    const presenterRef = useRef();
+    const lastTapRef = useRef(0);
+    const [presenterId, setPresenterId] = useState(null); // 'local' or remote socketId
 
     let [videoAvailable, setVideoAvailable] = useState(true);
 
@@ -71,6 +77,18 @@ export default function VideoMeetComponent() {
         getPermissions();
 
     })
+
+    // when presenterId or videos/local stream change, attach stream to presenter video element
+    useEffect(() => {
+        const el = presenterRef.current;
+        if (!el) return;
+        const stream = presenterId === 'local' ? window.localStream : videos.find(v => v.socketId === presenterId)?.stream;
+        try {
+            el.srcObject = stream || null;
+            const p = el.play?.();
+            if (p && p.catch) p.catch(() => { /* ignore autoplay errors */ });
+        } catch (e) { /* ignore */ }
+    }, [presenterId, videos]);
 
     let getDislayMedia = () => {
         if (screen) {
@@ -383,6 +401,20 @@ export default function VideoMeetComponent() {
         // getUserMedia();
     }
 
+    // double-tap detector for touch devices
+    const handleTouchTap = (id) => {
+        const now = Date.now();
+        if (now - lastTapRef.current < 300) {
+            // double-tap detected
+            handlePresenter(id);
+        }
+        lastTapRef.current = now;
+    };
+
+    const handlePresenter = (id) => {
+        setPresenterId(prev => prev === id ? null : id);
+    };
+
     useEffect(() => {
         if (screen !== undefined) {
             getDislayMedia();
@@ -450,7 +482,13 @@ export default function VideoMeetComponent() {
 
 
                     <div>
-                        <video ref={localVideoref} autoPlay muted></video>
+                        <video
+                            ref={localVideoref}
+                            autoPlay
+                            muted
+                            onDoubleClick={() => handlePresenter('local')}
+                            onTouchStart={() => handleTouchTap('local')}
+                        ></video>
                     </div>
 
                 </div> :
@@ -546,11 +584,17 @@ export default function VideoMeetComponent() {
                     </div>
 
 
-                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted
+                        onDoubleClick={() => handlePresenter('local')}
+                        onTouchStart={() => handleTouchTap('local')}
+                    ></video>
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
-                            <div key={video.socketId}>
+                            <div key={video.socketId}
+                                onDoubleClick={() => handlePresenter(video.socketId)}
+                                onTouchStart={() => handleTouchTap(video.socketId)}
+                            >
                                 <video
 
                                     data-socket={video.socketId}
@@ -568,6 +612,42 @@ export default function VideoMeetComponent() {
 
                     </div>
 
+                    {/* Presenter overlay */}
+                    {presenterId && (
+                        <div
+                            onClick={() => setPresenterId(null)}
+                            style={{
+                                position: "fixed",
+                                inset: 0,
+                                background: "rgba(0,0,0,0.8)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                zIndex: 2000,
+                                padding: 20
+                            }}
+                        >
+                            <div
+                                onClick={(e) => e.stopPropagation()}
+                                style={{ position: "relative", width: "90%", maxWidth: 1100, borderRadius: 12, overflow: "hidden", background: "#000" }}
+                            >
+                                <video
+                                    ref={presenterRef}
+                                    autoPlay
+                                    playsInline
+                                    controls={false}
+                                    style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: "#000" }}
+                                />
+                                <IconButton
+                                    onClick={() => setPresenterId(null)}
+                                    style={{ position: "absolute", right: 8, top: 8, color: "#fff", background: "rgba(0,0,0,0.4)" }}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
 
             }
@@ -575,3 +655,4 @@ export default function VideoMeetComponent() {
         </div>
     )
 }
+// ...existing code...
