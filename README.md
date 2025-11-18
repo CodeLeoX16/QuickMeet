@@ -91,7 +91,7 @@ Prerequisites:
    ```
 
 6. Open the app
-   Visit http://localhost:3000
+   https://quickmeet-4.onrender.com/
 
 ## API Overview
 
