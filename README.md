@@ -11,7 +11,7 @@ A modern, lightweight video conferencing platform built with cutting-edge web te
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
-[View Demo](#-demo) • [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
+[🌐 Live Demo](https://quickmeet-4.onrender.com/) • [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
 
 </div>
 
@@ -29,7 +29,7 @@ A modern, lightweight video conferencing platform built with cutting-edge web te
 
 <div align="center">
 
-*Add your screenshots or GIF demos here*
+### [🌐 **Try Live Demo →**](https://quickmeet-4.onrender.com/)
 
 | Landing Page | Meeting Interface | History Dashboard |
 |:---:|:---:|:---:|
