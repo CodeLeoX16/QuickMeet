@@ -19,7 +19,7 @@ A modern, lightweight video conferencing platform built with cutting-edge web te
 
 ## ✨ Overview
 
-**QuickMeet** is a full-stack video meeting application that brings people together with minimal friction. Built with performance and user experience in mind, it leverages WebRTC for peer-to-peer connections and Socket.IO for real-time signaling.
+**QuickMeet** is a full-stack video meeting application that brings people together with minimal friction. Built with performance and user experience in mind, it leverages WebRTC for peer-to-peer communication and Socket.IO for seamless real-time signaling.
 
 > 💡 **Perfect for**: Remote teams, online education, virtual events, or anyone looking for a lightweight alternative to heavy video conferencing tools.
 
@@ -33,10 +33,7 @@ A modern, lightweight video conferencing platform built with cutting-edge web te
 
 | Landing Page | Meeting Interface | History Dashboard |
 |:---:|:---:|:---:|
-| ![Landing](<img width="1908" height="985" alt="Screenshot 2025-10-08 010810" src="https://github.com/user-attachments/assets/990c8c56-ae1a-48e5-89c7-a586d11805f6" />
-) | ![Meeting](<img width="1903" height="975" alt="Screenshot 2025-10-08 011525" src="https://github.com/user-attachments/assets/a030da87-6c0e-43bb-b5ce-e1e314e644f2" />
-) | ![History](<img width="1877" height="892" alt="image" src="https://github.com/user-attachments/assets/2fc0deab-a821-4608-8ea6-cebfbd137c76" />)
- |
+| ![Landing](https://github.com/user-attachments/assets/990c8c56-ae1a-48e5-89c7-a586d11805f6) | ![Meeting](https://github.com/user-attachments/assets/a030da87-6c0e-43bb-b5ce-e1e314e644f2) | ![History](https://github.com/user-attachments/assets/2fc0deab-a821-4608-8ea6-cebfbd137c76) |
 
 </div>
 
