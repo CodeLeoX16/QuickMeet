@@ -1,203 +1,366 @@
-# QuickMeet
+<div align="center">
 
-QuickMeet is a lightweight, user-friendly meeting scheduler and instant-meet web application designed to help teams and individuals schedule, join, and manage meetings quickly. It focuses on speed, simplicity, timezone-aware scheduling, and integrations with popular calendar providers.
+# 🚀 QuickMeet
 
-> NOTE: This README is a general template. If you want it tailored to your actual tech stack (React, Next.js, Express, Django, Flutter, etc.), CI, or hosting details, tell me which stack and I’ll adapt the sections (installation, environment variables, commands) to match.
+### *Connect Instantly, Meet Seamlessly*
 
-## Features
+A modern, lightweight video conferencing platform built with cutting-edge web technologies
 
-- Create and share instant meeting links
-- Schedule meetings with timezone-aware times
-- Calendar integration (Google Calendar, Outlook — placeholder)
-- Availability management (block times, set working hours)
-- Invite participants via email with RSVPs
-- Simple meeting management UI (create, edit, cancel)
-- Lightweight authentication (email magic links / OAuth)
-- API endpoints for scheduling and retrieving meetings
-- Docker-ready for easy deployment
+[![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
-## Screenshots / Demo
+[View Demo](#-demo) • [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
 
-Add screenshots or a short demo GIF here to show key flows:
-- Create meeting
-- Join meeting
-- Manage availability
-
-(You can add images by placing them in `/assets` and referencing them here.)
-
-## Tech Stack (Suggested)
-
-- Frontend: React / Next.js / Vue
-- Backend: Node.js + Express / NestJS / Django / Flask
-- Database: PostgreSQL (recommended) / SQLite for local dev
-- Authentication: OAuth2 (Google) and/or email magic links
-- Containerization: Docker
-- Optional: WebRTC for real-time video/audio
-
-Replace the above with your actual stack.
-
-## Getting Started (Local Development)
-
-These are example steps — update according to your project's actual commands.
-
-Prerequisites:
-- Node.js >= 16
-- npm or yarn
-- Docker (optional, recommended for running DB)
-
-1. Clone the repo
-   ```bash
-   git clone https://github.com/CodeLeoX16/QuickMeet.git
-   cd QuickMeet
-   ```
-
-2. Install dependencies (frontend & backend, if in separate folders)
-   ```bash
-   # if monorepo or separate packages
-   cd backend
-   npm install
-
-   cd ../frontend
-   npm install
-   ```
-
-3. Setup environment variables
-
-   Create a `.env` file in the backend folder with the following example values:
-   ```
-   PORT=4000
-   DATABASE_URL=postgres://user:password@localhost:5432/quickmeet
-   JWT_SECRET=replace_with_a_secure_random_string
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
-   FRONTEND_URL=http://localhost:3000
-   ```
-
-4. Run the database (example with Docker Compose)
-   ```bash
-   # from repo root if docker-compose.yml provided
-   docker-compose up -d
-   ```
-
-5. Start backend and frontend
-   ```bash
-   # backend
-   cd backend
-   npm run dev
-
-   # frontend
-   cd ../frontend
-   npm run dev
-   ```
-
-6. Open the app
-   https://quickmeet-4.onrender.com/
-
-## API Overview
-
-Example endpoints (adjust to match your implementation):
-
-- POST /api/auth/login — request login / magic link
-- POST /api/auth/oauth — OAuth callback handling
-- GET /api/meetings — list user meetings
-- POST /api/meetings — create a meeting
-- GET /api/meetings/:id — meeting details
-- POST /api/meetings/:id/invite — send invite email
-- PUT /api/meetings/:id — update meeting
-- DELETE /api/meetings/:id — cancel meeting
-
-Document the full OpenAPI/Swagger spec in `/docs` or link to hosted API docs.
-
-## Environment Variables
-
-Suggested list (update for your app):
-- PORT
-- DATABASE_URL
-- JWT_SECRET
-- SESSION_SECRET (if applicable)
-- SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (for emails)
-- GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
-- FRONTEND_URL
-
-## Tests
-
-Add tests and the commands to run them. Example:
-```bash
-# backend tests
-cd backend
-npm test
-
-# frontend tests (if using Jest/RTL)
-cd frontend
-npm test
-```
-
-Include test coverage and CI configuration (GitHub Actions, etc.) if available.
-
-## Docker (Optional)
-
-Example Dockerfile and docker-compose should build frontend, backend, and a Postgres service. Provide commands to build and run containers:
-```bash
-docker-compose build
-docker-compose up
-```
-
-## Deployment
-
-- Deploy backend to: Heroku / Vercel (serverless) / DigitalOcean / AWS ECS
-- Deploy frontend to: Vercel / Netlify / Surge
-- Use managed Postgres (ElephantSQL, Heroku Postgres, AWS RDS)
-- Secure environment variables in your hosting provider
-
-## Contributing
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create a branch: git checkout -b feature/your-feature
-3. Commit changes: git commit -m "Add some feature"
-4. Push to branch: git push origin feature/your-feature
-5. Open a Pull Request describing the change
-
-Please follow these guidelines:
-- Write tests for new features and bug fixes
-- Keep PRs focused and well-documented
-- Follow code style used in the repo (Prettier / ESLint)
-
-## Roadmap / Ideas
-
-- Two-way calendar sync (Google, Outlook)
-- Meeting templates and recurring meetings
-- Group availability/polling to find the best time
-- Mobile apps (iOS, Android)
-- Whiteboard and chat during meetings
-- End-to-end encryption for meeting content
-
-## License
-
-This project is currently unlicensed. Consider adding a license such as MIT:
-```
-MIT License
-...
-```
-
-Or add your preferred license file (LICENSE).
-
-## Acknowledgements
-
-- Thanks to open-source libraries used in this project
-- Inspiration: Calendly, Meet, Zoom, Google Calendar
-
-## Contact / Maintainer
-
-Maintained by CodeLeoX16 — open issues, discussions, and PRs are welcome.
+</div>
 
 ---
 
-If you'd like, I can:
-- tailor this README to match your actual tech stack and commands,
-- generate a LICENSE file (MIT, Apache-2.0, etc.),
-- create a CONTRIBUTING.md and CODE_OF_CONDUCT.md,
-- or produce example GitHub Actions CI workflow and docker-compose.yml.
+## ✨ Overview
 
-Which of those would you like next?
+**QuickMeet** is a full-stack video meeting application that brings people together with minimal friction. Built with performance and user experience in mind, it leverages WebRTC for peer-to-peer connections and Socket.IO for real-time signaling.
+
+> 💡 **Perfect for**: Remote teams, online education, virtual events, or anyone looking for a lightweight alternative to heavy video conferencing tools.
+
+---
+
+## 🎥 Demo
+
+<div align="center">
+
+*Add your screenshots or GIF demos here*
+
+| Landing Page | Meeting Interface | History Dashboard |
+|:---:|:---:|:---:|
+| ![Landing](docs/screenshot-landing.png) | ![Meeting](docs/screenshot-meeting.png) | ![History](docs/screenshot-history.png) |
+
+</div>
+
+---
+
+## 🎯 Features
+
+<table>
+<tr>
+<td width="50%">
+
+### Core Functionality
+- 🎬 **Instant Meeting Creation** - Start or join meetings in seconds
+- 📹 **HD Video & Audio** - Crystal clear communication
+- 🔄 **Real-time Signaling** - Powered by Socket.IO
+- 💾 **Meeting History** - Track and revisit past meetings
+- 🔐 **Secure Authentication** - User accounts with JWT
+
+</td>
+<td width="50%">
+
+### Technical Highlights
+- ⚡ **Lightweight Architecture** - Fast and responsive
+- 📱 **Fully Responsive** - Works on any device
+- 🎨 **Modern UI** - Beautiful Material Design interface
+- 🔌 **WebRTC Integration** - Direct peer connections
+- 🗄️ **MongoDB Backend** - Scalable data storage
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠️ Tech Stack
+
+<div align="center">
+
+### Frontend
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![React Router](https://img.shields.io/badge/React_Router-CA4245?style=flat&logo=react-router&logoColor=white)
+![Material-UI](https://img.shields.io/badge/Material--UI-0081CB?style=flat&logo=material-ui&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io_Client-010101?style=flat&logo=socket.io&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white)
+
+### Backend
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat&logo=express&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=flat&logo=mongoose&logoColor=white)
+
+### Development
+![Nodemon](https://img.shields.io/badge/Nodemon-76D04B?style=flat&logo=nodemon&logoColor=white)
+![ES Modules](https://img.shields.io/badge/ES_Modules-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+</div>
+
+---
+
+## 🏗️ Architecture
+
+```
+QuickMeet/
+├── 📁 frontend/                # React SPA
+│   ├── 📁 src/
+│   │   ├── 📁 pages/          # Landing, Auth, Home, VideoMeet, History
+│   │   ├── 📁 components/     # Reusable UI components
+│   │   └── 📁 utils/          # Helper functions
+│   └── package.json
+│
+└── 📁 backend/                 # Express API Server
+    ├── 📁 routes/             # REST API endpoints
+    │   └── users.routes.js
+    ├── 📁 models/             # MongoDB schemas
+    │   ├── user.model.js
+    │   └── meeting.model.js
+    ├── socketManager.js       # WebSocket signaling
+    └── server.js              # Entry point
+```
+
+**Data Flow:**
+1. 🌐 User authenticates via REST API (JWT)
+2. 🔌 Client connects to Socket.IO for real-time signaling
+3. 📡 WebRTC handles peer-to-peer video/audio streams
+4. 💾 Meeting metadata stored in MongoDB
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+Make sure you have these installed:
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **npm** or **yarn**
+- **MongoDB** - [Local](https://www.mongodb.com/try/download/community) or [Atlas](https://www.mongodb.com/cloud/atlas)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/CodeLeoX16/QuickMeet.git
+cd QuickMeet
+
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+### Configuration
+
+Create a `.env` file in the `backend/` directory:
+
+```env
+# Database
+MONGO_URI=mongodb://localhost:27017/quickmeet
+
+# Server
+PORT=5000
+
+# Security
+JWT_SECRET=your_super_secret_jwt_key_change_this
+
+# Optional: Frontend URL for CORS
+FRONTEND_URL=http://localhost:3000
+```
+
+Create a `.env` file in the `frontend/` directory (if needed):
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
+
+### Running the Application
+
+**Option 1: Run both services separately**
+
+```bash
+# Terminal 1 - Backend
+cd backend
+npm run dev
+
+# Terminal 2 - Frontend
+cd frontend
+npm start
+```
+
+**Option 2: Use concurrently (if configured)**
+
+```bash
+npm run dev
+```
+
+The application will be available at:
+- 🌐 **Frontend**: http://localhost:3000
+- ⚙️ **Backend**: http://localhost:5000
+
+---
+
+## 📚 Documentation
+
+### API Endpoints
+
+#### Authentication
+```http
+POST /api/users/register    # Create new account
+POST /api/users/login        # Login
+GET  /api/users/profile      # Get user profile (JWT required)
+```
+
+#### Meetings
+```http
+POST /api/meetings           # Create new meeting
+GET  /api/meetings/history   # Get meeting history
+```
+
+### Socket Events
+
+**Client → Server**
+```javascript
+socket.emit('join-room', { roomId, userId })
+socket.emit('signal', { roomId, signal, to })
+```
+
+**Server → Client**
+```javascript
+socket.on('user-joined', ({ userId }) => { ... })
+socket.on('signal', ({ signal, from }) => { ... })
+socket.on('user-left', ({ userId }) => { ... })
+```
+
+### Example: Connecting to a Meeting
+
+```javascript
+import { io } from 'socket.io-client';
+
+const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
+
+// Join a room
+socket.emit('join-room', { 
+  roomId: 'meeting-123', 
+  userId: 'user-456' 
+});
+
+// Listen for signals
+socket.on('signal', async (data) => {
+  // Handle WebRTC signaling (offer/answer/ICE)
+  console.log('Received signal:', data);
+});
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Frontend tests (React Testing Library)
+cd frontend
+npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Generate coverage report
+npm test -- --coverage
+```
+
+> 📝 **Note**: Backend tests coming soon!
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **🍴 Fork** the repository
+2. **🌿 Create** your feature branch
+   ```bash
+   git checkout -b feat/amazing-feature
+   ```
+3. **💾 Commit** your changes
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+4. **📤 Push** to the branch
+   ```bash
+   git push origin feat/amazing-feature
+   ```
+5. **🎉 Open** a Pull Request
+
+### Development Guidelines
+- Follow existing code style and conventions
+- Add comments for complex logic
+- Update documentation for new features
+- Include screenshots for UI changes
+- Test thoroughly before submitting
+
+### Ideas for Contributions
+- [ ] Add screen sharing functionality
+- [ ] Implement chat messaging during meetings
+- [ ] Add meeting recording feature
+- [ ] Create mobile app (React Native)
+- [ ] Add end-to-end encryption
+- [ ] Implement waiting rooms
+- [ ] Add virtual backgrounds
+- [ ] Create admin dashboard
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Basic video calling functionality
+- [x] User authentication
+- [x] Meeting history
+- [ ] Screen sharing
+- [ ] In-meeting chat
+- [ ] Recording capabilities
+- [ ] Meeting scheduling
+- [ ] Calendar integration
+- [ ] Mobile applications
+- [ ] AI-powered features (transcription, translation)
+
+---
+
+## 📝 License
+
+This project is licensed under the **ISC License**.
+
+See the backend `package.json` for details, or add a dedicated `LICENSE` file for clarity.
+
+---
+
+## 📧 Contact & Support
+
+<div align="center">
+
+**Created by CodeLeoX16**
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/CodeLeoX16)
+
+Found a bug? Have a feature request? 
+[Open an issue](https://github.com/CodeLeoX16/QuickMeet/issues/new)
+
+⭐ **Star this repo** if you find it useful!
+
+</div>
+
+---
+
+## 🙏 Acknowledgments
+
+- WebRTC community for excellent documentation
+- Socket.IO team for the amazing real-time framework
+- Material-UI for the beautiful component library
+- All contributors who help improve QuickMeet
+
+---
+
+<div align="center">
+
+**Made with ❤️ and ☕**
+
+*Happy Meeting!* 🎉
+
+</div>
