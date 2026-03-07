@@ -265,4 +265,4 @@ export default function Authentication() {
       </Box>
     </ThemeProvider>
   );
-}
+}  

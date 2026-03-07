@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+// ...existing code...
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import io from "socket.io-client";
-import { Badge, IconButton, TextField } from '@mui/material';
+import { Badge, IconButton, TextField, Avatar } from '@mui/material';
 import { Button } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff'
@@ -11,11 +12,13 @@ import MicOffIcon from '@mui/icons-material/MicOff'
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
+import CloseIcon from '@mui/icons-material/Close'
 import server from '../environment';
 
 const server_url = server;
 
-var connections = {};
+// Peer connections map: socketId -> RTCPeerConnection
+const connections = {};
 
 const peerConfigConnections = {
     "iceServers": [
@@ -23,12 +26,32 @@ const peerConfigConnections = {
     ]
 }
 
+/**
+ * VideoMeetComponent
+ * Main meeting UI and WebRTC logic.
+ *
+ * Responsibilities:
+ * - request camera/microphone/screen permissions (`getPermissions`)
+ * - manage `window.localStream` and attach to the local <video>
+ * - create/maintain RTCPeerConnection objects in `connections`
+ * - handle signaling via socket.io (`connectToSocketServer`, `gotMessageFromServer`)
+ * - provide UI handlers to toggle video/audio/screen and send chat messages
+ *
+ * Notes for readers/recruiters: the component keeps helper functions
+ * documented and avoids double permission prompts by requesting combined
+ * audio+video where possible.
+ */
 export default function VideoMeetComponent() {
 
     var socketRef = useRef();
     let socketIdRef = useRef();
 
     let localVideoref = useRef();
+
+    // presenter overlay refs/state
+    const presenterRef = useRef();
+    const lastTapRef = useRef(0);
+    const [presenterId, setPresenterId] = useState(null); // 'local' or remote socketId
 
     let [videoAvailable, setVideoAvailable] = useState(true);
 
@@ -62,74 +85,92 @@ export default function VideoMeetComponent() {
     // if(isChrome() === false) {
 
 
+
     // }
 
     useEffect(() => {
-        console.log("HELLO")
         getPermissions();
+    }, [])
 
-    })
+    // when presenterId or videos/local stream change, attach stream to presenter video element
+    useEffect(() => {
+        const el = presenterRef.current;
+        if (!el) return;
+        const stream = presenterId === 'local' ? window.localStream : videos.find(v => v.socketId === presenterId)?.stream;
+        try {
+            el.srcObject = stream || null;
+            const p = el.play?.();
+            if (p && p.catch) p.catch(() => { /* ignore autoplay errors */ });
+        } catch (e) { /* ignore */ }
+    }, [presenterId, videos]);
 
-    let getDislayMedia = () => {
-        if (screen) {
-            if (navigator.mediaDevices.getDisplayMedia) {
-                navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-                    .then(getDislayMediaSuccess)
-                    .then((stream) => { })
-                    .catch((e) => console.log(e))
-            }
-        }
-    }
+    // display media is requested directly where needed; helper removed to avoid unused-vars
 
     const getPermissions = async () => {
         try {
-            const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoPermission) {
-                setVideoAvailable(true);
-                console.log('Video permission granted');
-            } else {
+            if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
                 setVideoAvailable(false);
-                console.log('Video permission denied');
-            }
-
-            const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
-            if (audioPermission) {
-                setAudioAvailable(true);
-                console.log('Audio permission granted');
-            } else {
                 setAudioAvailable(false);
-                console.log('Audio permission denied');
+                setScreenAvailable(!!navigator.mediaDevices?.getDisplayMedia);
+                return;
             }
 
-            if (navigator.mediaDevices.getDisplayMedia) {
-                setScreenAvailable(true);
-            } else {
-                setScreenAvailable(false);
-            }
+            // Try to request both audio and video in a single prompt
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const hasVideo = stream.getVideoTracks().length > 0;
+                const hasAudio = stream.getAudioTracks().length > 0;
+                setVideoAvailable(hasVideo);
+                setAudioAvailable(hasAudio);
+                setScreenAvailable(!!navigator.mediaDevices.getDisplayMedia);
 
-            if (videoAvailable || audioAvailable) {
-                const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
-                if (userMediaStream) {
-                    window.localStream = userMediaStream;
-                    if (localVideoref.current) {
-                        localVideoref.current.srcObject = userMediaStream;
-                    }
+                window.localStream = stream;
+                if (localVideoref.current) {
+                    localVideoref.current.srcObject = stream;
+                }
+                return;
+            } catch (err) {
+                // Combined request failed — fall back gently to detect availability without spamming prompts
+                console.warn('Combined getUserMedia failed:', err);
+
+                // Attempt individual requests but avoid double-prompts when possible
+                let stream = null;
+                let hasVideo = false;
+                let hasAudio = false;
+
+                try {
+                    const v = await navigator.mediaDevices.getUserMedia({ video: true });
+                    hasVideo = v.getVideoTracks().length > 0;
+                    stream = v;
+                } catch (e) {
+                    hasVideo = false;
+                }
+
+                try {
+                    const a = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    hasAudio = a.getAudioTracks().length > 0;
+                    if (stream) {
+                        a.getAudioTracks().forEach(t => stream.addTrack(t));
+                    } else stream = a;
+                } catch (e) {
+                    hasAudio = false;
+                }
+
+                setVideoAvailable(hasVideo);
+                setAudioAvailable(hasAudio);
+                setScreenAvailable(!!navigator.mediaDevices.getDisplayMedia);
+
+                if (stream) {
+                    window.localStream = stream;
+                    if (localVideoref.current) localVideoref.current.srcObject = stream;
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
-    useEffect(() => {
-        if (video !== undefined && audio !== undefined) {
-            getUserMedia();
-            console.log("SET STATE HAS ", video, audio);
-
-        }
-
-
-    }, [video, audio])
+    /* effect moved below to avoid using getUserMedia before its definition */
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
@@ -137,10 +178,7 @@ export default function VideoMeetComponent() {
 
     }
 
-
-
-
-    let getUserMediaSuccess = (stream) => {
+    const getUserMediaSuccess = useCallback((stream) => {
         try {
             window.localStream.getTracks().forEach(track => track.stop())
         } catch (e) { console.log(e) }
@@ -188,9 +226,9 @@ export default function VideoMeetComponent() {
                 })
             }
         })
-    }
+    }, [])
 
-    let getUserMedia = () => {
+    const getUserMedia = useCallback(() => {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
                 .then(getUserMediaSuccess)
@@ -202,13 +240,9 @@ export default function VideoMeetComponent() {
                 tracks.forEach(track => track.stop())
             } catch (e) { }
         }
-    }
+    }, [video, audio, videoAvailable, audioAvailable, getUserMediaSuccess])
 
-
-
-
-
-    let getDislayMediaSuccess = (stream) => {
+    const getDislayMediaSuccess = useCallback((stream) => {
         console.log("HERE")
         try {
             window.localStream.getTracks().forEach(track => track.stop())
@@ -246,7 +280,15 @@ export default function VideoMeetComponent() {
             getUserMedia()
 
         })
-    }
+    }, [getUserMedia])
+
+    // call getUserMedia when user toggles audio/video
+    useEffect(() => {
+        if (video !== undefined && audio !== undefined) {
+            getUserMedia();
+            console.log("SET STATE HAS ", video, audio);
+        }
+    }, [video, audio, getUserMedia])
 
     let gotMessageFromServer = (fromId, message) => {
         var signal = JSON.parse(message)
@@ -269,9 +311,6 @@ export default function VideoMeetComponent() {
             }
         }
     }
-
-
-
 
     let connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false })
@@ -391,11 +430,29 @@ export default function VideoMeetComponent() {
         // getUserMedia();
     }
 
-    useEffect(() => {
-        if (screen !== undefined) {
-            getDislayMedia();
+    // double-tap detector for touch devices
+    const handleTouchTap = (id) => {
+        const now = Date.now();
+        if (now - lastTapRef.current < 300) {
+            // double-tap detected
+            handlePresenter(id);
         }
-    }, [screen])
+        lastTapRef.current = now;
+    };
+
+    const handlePresenter = (id) => {
+        setPresenterId(prev => prev === id ? null : id);
+    };
+
+    useEffect(() => {
+        if (screen !== undefined && screen) {
+            if (navigator.mediaDevices?.getDisplayMedia) {
+                navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
+                    .then(getDislayMediaSuccess)
+                    .catch((e) => console.log(e))
+            }
+        }
+    }, [screen, getDislayMediaSuccess])
     let handleScreen = () => {
         setScreen(!screen);
     }
@@ -408,16 +465,6 @@ export default function VideoMeetComponent() {
         window.location.href = "/"
     }
 
-    let openChat = () => {
-        setModal(true);
-        setNewMessages(0);
-    }
-    let closeChat = () => {
-        setModal(false);
-    }
-    let handleMessage = (e) => {
-        setMessage(e.target.value);
-    }
 
     const addMessage = (data, sender, socketIdSender) => {
         setMessages((prevMessages) => [
@@ -428,8 +475,6 @@ export default function VideoMeetComponent() {
             setNewMessages((prevNewMessages) => prevNewMessages + 1);
         }
     };
-
-
 
     let sendMessage = () => {
         console.log(socketRef.current);
@@ -460,7 +505,13 @@ export default function VideoMeetComponent() {
 
 
                     <div>
-                        <video ref={localVideoref} autoPlay muted></video>
+                        <video
+                            ref={localVideoref}
+                            autoPlay
+                            muted
+                            onDoubleClick={() => handlePresenter('local')}
+                            onTouchStart={() => handleTouchTap('local')}
+                        ></video>
                     </div>
 
                 </div> :
@@ -468,36 +519,69 @@ export default function VideoMeetComponent() {
 
                 <div className={styles.meetVideoContainer}>
 
-                    {showModal ? <div className={styles.chatRoom}>
+                    {showModal ? (
+                        <div style={{
+                            position: "absolute",
+                            right: 20,
+                            top: 20,
+                            width: 360,
+                            maxHeight: "75vh",
+                            display: "flex",
+                            flexDirection: "column",
+                            borderRadius: 12,
+                            overflow: "hidden",
+                            background: "linear-gradient(180deg, #071226, #0b1220)",
+                            boxShadow: "0 12px 40px rgba(2,6,23,0.6)",
+                            color: "#fff",
+                            zIndex: 80
+                        }}>
+                            <div style={{ padding: 12, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                                <h2 style={{ margin: 0, fontSize: 16 }}>Meeting Chat</h2>
+                                <IconButton size="small" onClick={() => setModal(false)} style={{ color: "#fff" }}>
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </div>
 
-                        <div className={styles.chatContainer}>
-                            <h1>Chat</h1>
-
-                            <div className={styles.chattingDisplay}>
-
-                                {messages.length !== 0 ? messages.map((item, index) => {
-
-                                    console.log(messages)
-                                    return (
-                                        <div style={{ marginBottom: "20px" }} key={index}>
-                                            <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                                            <p>{item.data}</p>
+                            <div style={{ padding: 12, overflowY: "auto", flex: 1 }}>
+                                {messages.length === 0 ? (
+                                    <p style={{ opacity: 0.6, margin: 0 }}>No messages yet</p>
+                                ) : (
+                                    messages.map((item, index) => (
+                                        <div key={index} style={{ display: "flex", gap: 10, marginBottom: 12, alignItems: "flex-start" }}>
+                                            <Avatar style={{ width: 36, height: 36, background: "#1976d2", flexShrink: 0 }}>{item.sender?.[0]?.toUpperCase() || "?"}</Avatar>
+                                            <div style={{ background: "rgba(255,255,255,0.03)", padding: "8px 12px", borderRadius: 10, maxWidth: "78%" }}>
+                                                <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 4 }}>{item.sender}</div>
+                                                <div style={{ wordBreak: "break-word", fontSize: 14 }}>{item.data}</div>
+                                            </div>
                                         </div>
-                                    )
-                                }) : <p>No Messages Yet</p>}
-
-
+                                    ))
+                                )}
                             </div>
 
-                            <div className={styles.chattingArea}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
-                                <Button variant='contained' onClick={sendMessage}>Send</Button>
+                            <div style={{ padding: 12, borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: 8 }}>
+                                <TextField
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    placeholder="Say something..."
+                                    fullWidth
+                                    size="small"
+                                    variant="outlined"
+                                    onKeyDown={e => { if (e.key === "Enter") sendMessage(); }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            background: 'rgba(255,255,255,0.03)',
+                                            borderRadius: 1,
+                                            '& fieldset': { borderColor: 'rgba(255,255,255,0.06)' },
+                                            '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.12)' }
+                                        },
+                                        '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.6)' },
+                                        '& .MuiInputBase-input': { color: '#ffffff' }
+                                    }}
+                                />
+                                <Button variant="contained" onClick={sendMessage} style={{ background: "#1976d2" }}>Send</Button>
                             </div>
-
-
                         </div>
-                    </div> : <></>}
-
+                    ) : <></>}
 
                     <div className={styles.buttonContainers}>
                         <IconButton onClick={handleVideo} style={{ color: "white" }}>
@@ -523,11 +607,17 @@ export default function VideoMeetComponent() {
                     </div>
 
 
-                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted
+                        onDoubleClick={() => handlePresenter('local')}
+                        onTouchStart={() => handleTouchTap('local')}
+                    ></video>
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
-                            <div key={video.socketId}>
+                            <div key={video.socketId}
+                                onDoubleClick={() => handlePresenter(video.socketId)}
+                                onTouchStart={() => handleTouchTap(video.socketId)}
+                            >
                                 <video
 
                                     data-socket={video.socketId}
@@ -545,11 +635,47 @@ export default function VideoMeetComponent() {
 
                     </div>
 
+                    {/* Presenter overlay */}
+                    {presenterId && (
+                        <div
+                            onClick={() => setPresenterId(null)}
+                            style={{
+                                position: "fixed",
+                                inset: 0,
+                                background: "rgba(0,0,0,0.8)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                zIndex: 2000,
+                                padding: 20
+                            }}
+                        >
+                            <div
+                                onClick={(e) => e.stopPropagation()}
+                                style={{ position: "relative", width: "90%", maxWidth: 1100, borderRadius: 12, overflow: "hidden", background: "#000" }}
+                            >
+                                <video
+                                    ref={presenterRef}
+                                    autoPlay
+                                    playsInline
+                                    controls={false}
+                                    style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: "#000" }}
+                                />
+                                <IconButton
+                                    onClick={() => setPresenterId(null)}
+                                    style={{ position: "absolute", right: 8, top: 8, color: "#fff", background: "rgba(0,0,0,0.4)" }}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
 
             }
 
         </div>
     )
-    
 }
+// ...existing code...

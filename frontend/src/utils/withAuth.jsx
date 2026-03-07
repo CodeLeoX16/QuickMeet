@@ -1,22 +1,20 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 
+// HOC: redirects to /auth when no token is found in localStorage
 const withAuth = (WrappedComponent ) => {
     const AuthComponent = (props) => {
         const router = useNavigate();
 
         const isAuthenticated = () => {
-            if(localStorage.getItem("token")) {
-                return true;
-            } 
-            return false;
+            return !!localStorage.getItem("token");
         }
 
         useEffect(() => {
             if(!isAuthenticated()) {
                 router("/auth")
             }
-        }, [])
+        }, [router])
 
         return <WrappedComponent {...props} />
     }

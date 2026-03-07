@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <style>
+    .box { fill:#f8f9fb; stroke:#333; stroke-width:1.5px; rx:8px; }
+    .title { font: bold 18px Arial; fill:#111 }
+    .label { font: 14px Arial; fill:#111 }
+    .sub { font: 12px Arial; fill:#333 }
+    .arrow { stroke:#333; stroke-width:1.6; fill:none; marker-end:url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- Client -->
+  <rect x="40" y="40" width="320" height="160" class="box" />
+  <text x="60" y="70" class="title">Client (Browser)</text>
+  <text x="60" y="95" class="sub">React UI: VideoMeet.jsx</text>
+  <text x="60" y="120" class="sub">getUserMedia → Media Devices</text>
+  <text x="60" y="145" class="sub">socket.io client (signaling)</text>
+
+  <!-- Signaling -->
+  <rect x="420" y="40" width="360" height="140" class="box" />
+  <text x="440" y="70" class="title">Signaling Server</text>
+  <text x="440" y="100" class="sub">Node / Express + socket.io</text>
+  <text x="440" y="125" class="sub">Handles join-call, signal (SDP/ICE), chat</text>
+
+  <!-- P2P -->
+  <rect x="820" y="40" width="320" height="160" class="box" />
+  <text x="840" y="70" class="title">Peer (WebRTC)</text>
+  <text x="840" y="100" class="sub">RTCPeerConnection</text>
+  <text x="840" y="125" class="sub">Direct media exchange (audio/video)</text>
+
+  <!-- Infrastructure -->
+  <rect x="40" y="240" width="1100" height="120" class="box" />
+  <text x="60" y="275" class="title">Infrastructure</text>
+  <text x="60" y="305" class="sub">STUN: stun.l.google.com:19302</text>
+  <text x="60" y="330" class="sub">TURN (optional): for relay when NAT traversal fails</text>
+
+  <!-- Arrows -->
+  <path d="M360 120 L420 120" class="arrow" />
+  <path d="M780 120 L820 120" class="arrow" />
+  <path d="M640 200 L640 240" class="arrow" />
+  <path d="M640 360 L640 400" class="arrow" />
+
+  <!-- Notes -->
+  <text x="60" y="420" class="label">Flow: getUserMedia → connect to Signaling Server → exchange SDP/ICE → establish P2P RTCPeerConnection → attach streams to &lt;video&gt;</text>
+  <text x="60" y="440" class="label">Note: Full-mesh is fine for small groups; for larger groups use an SFU.</text>
+</svg>
