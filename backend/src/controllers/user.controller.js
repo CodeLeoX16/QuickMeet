@@ -13,7 +13,7 @@ const login = async (req, res) => {
     }
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username });    
         if (!user) {
             return res.status(httpStatus.NOT_FOUND).json({ message: "User Not Found" })
         }
