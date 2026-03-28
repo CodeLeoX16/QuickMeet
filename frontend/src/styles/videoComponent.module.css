@@ -59,3 +59,52 @@
     position: absolute;
     bottom: 0;
 }
+
+/* Chat message styles */
+.chatMessageWrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.chatMessageSelfWrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.chatAvatar {
+    width: 36px;
+    height: 36px;
+    background: #1976d2;
+    flex-shrink: 0;
+}
+
+.chatBubble {
+    background: rgba(255,255,255,0.03);
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 78%;
+}
+
+.chatBubbleSelf {
+    background: linear-gradient(90deg,#1976d2,#42a5f5);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 78%;
+}
+
+.chatSender {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.chatText {
+    word-break: break-word;
+    font-size: 14px;
+}
