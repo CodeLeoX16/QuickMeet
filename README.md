@@ -65,6 +65,7 @@ Open the frontend URL (usually http://localhost:3000) and join a meeting with a 
 Add screenshots or a short GIF here to highlight the main screens: landing, meeting UI, and history.
 <p>
  <img width="800" alt="Screenshot 2025-10-08 011525" src="https://github.com/user-attachments/assets/4ad7e25f-ccbd-4794-8f48-40da68d0b8f0" />
+ <img width="1908" height="985" alt="Screenshot 2025-10-08 010810" src="https://github.com/user-attachments/assets/6d053c61-4f18-4336-a7d7-729f8a3ab4f2" />
 </p>
 
 
