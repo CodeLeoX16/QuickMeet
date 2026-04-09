@@ -2,7 +2,7 @@
 
 A lightweight video meeting app built with **React** (frontend) and **Node/Express + Socket.IO** (backend). QuickMeet uses **WebRTC** for low-latency peer-to-peer video/audio, plus optional **screen sharing**.
 
-> Designed to be simple to run, easy to explain in interviews, and focused on the core real-time meeting experience.
+
 
 ## Live Demo
 - https://quickmeet-4.onrender.com/
