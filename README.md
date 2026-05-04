@@ -42,7 +42,7 @@ A lightweight video meeting app built with **React** (frontend) and **Node/Expre
 
 ## Demo
 
-Add screenshots or a short GIF here to show the main flow (Landing → Join → In-call UI).
+
 
 <p>
   <img width="1908" height="985" alt="QuickMeet Screenshot 1" src="https://github.com/user-attachments/assets/6d053c61-4f18-4336-a7d7-729f8a3ab4f2" />
