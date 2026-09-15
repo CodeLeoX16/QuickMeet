@@ -1,110 +1,182 @@
+/* ==========================================
+   Global App & Landing Page Styles
+   ================================---------- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #090d16;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Landing Page background stars effect */
+.star-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+/* ==========================================
+   Video Meet Room Layout Styles
+   ================================---------- */
 .meetVideoContainer {
     position: relative;
+    width: 100vw;
     height: 100vh;
-    background: rgb(1, 4, 48);
+    background: #090d16;
+    overflow: hidden;
 }
 
+/* Local User Video Preview (Picture-in-Picture) */
 .meetUserVideo {
     position: absolute;
-    bottom: 10vh;
-    height: 20vh;
-    width: auto;
-    left: 0;
-    border-radius: 20px;
+    bottom: 90px;
+    left: 24px;
+    height: 180px;
+    width: 240px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    background-color: #000;
+    z-index: 10;
 }
 
+/* Floating Control Dock */
 .buttonContainers {
     position: absolute;
-    width: 100vw;
-    bottom: 0;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 20px;
+    border-radius: 9999px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 50;
     text-align: center;
 }
 
 .buttonContainers svg {
-    font-size: 3rem;
+    font-size: 1.5rem;
 }
 
-.conferenceView { 
-
+/* Remote Participants Grid View */
+.conferenceView {
     display: flex;
-    
-    padding: 10px;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 24px;
+    width: 100%;
+    height: calc(100vh - 100px);
+    box-sizing: border-box;
+    align-content: flex-start;
+    overflow-y: auto;
 }
 
-.conferenceView  video {
-    width: 40vw;
-    height: 20vh;
-    min-width: 30vw;
-    border-radius: 10px;
+.conferenceView video {
+    width: 320px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    background-color: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* ==========================================
+   Chat Room & Messaging Styles
+   ================================---------- */
 .chatRoom {
     position: absolute;
-    height: 90vh;
-    right: 0;
-    background: white;
-    border-radius: 10px;
-    width: 30vw;
-    padding-inline: 20px;
+    top: 20px;
+    right: 20px;
+    bottom: 90px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    width: 360px;
+    padding: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
 }
 
 .chatContainer {
     position: relative;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
-
 
 .chattingArea {
-    position: absolute;
-    bottom: 0;
+    margin-top: auto;
+    width: 100%;
 }
 
-/* Chat message styles */
+/* Chat Message Wrappers */
 .chatMessageWrapper {
     display: flex;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     align-items: flex-start;
 }
 
 .chatMessageSelfWrapper {
     display: flex;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     align-items: flex-start;
     justify-content: flex-end;
 }
 
 .chatAvatar {
-    width: 36px;
-    height: 36px;
-    background: #1976d2;
+    width: 32px;
+    height: 32px;
+    background: #2563eb;
+    font-size: 0.85rem;
+    font-weight: 600;
     flex-shrink: 0;
 }
 
 .chatBubble {
-    background: rgba(255,255,255,0.03);
-    padding: 8px 12px;
-    border-radius: 10px;
-    max-width: 78%;
-}
-
-.chatBubbleSelf {
-    background: linear-gradient(90deg,#1976d2,#42a5f5);
-    color: white;
-    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 10px 14px;
     border-radius: 12px;
     max-width: 78%;
 }
 
+.chatBubbleSelf {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 78%;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
 .chatSender {
-    font-weight: 700;
-    font-size: 12px;
+    font-weight: 600;
+    font-size: 11px;
+    color: #94a3b8;
     margin-bottom: 4px;
 }
 
 .chatText {
     word-break: break-word;
-    font-size: 14px;
+    font-size: 13.5px;
+    line-height: 1.4;
 }

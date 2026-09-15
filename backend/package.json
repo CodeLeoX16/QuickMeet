@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js",
+    "dev": "nodemon --exec \"node --env-file=.env\" src/app.js",
+    "start": "node --env-file=.env src/app.js",
     "Prod": "pm2 src/app.js"
   },
   "author": "",

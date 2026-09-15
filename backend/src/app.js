@@ -22,12 +22,15 @@ app.use(express.urlencoded({ limit: "40kb", extended: true }));
 app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
-    app.set("mongo_user")
-    const connectionDb = await mongoose.connect("mongodb+srv://bhuniasomnath420:Somnath2003@cluster0.1wbb9l0.mongodb.net/")
+    if (!process.env.MONGO_URI) {
+        throw new Error("MONGO_URI is not configured")
+    }
+
+    const connectionDb = await mongoose.connect(process.env.MONGO_URI)
 
     console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`)
     server.listen(app.get("port"), () => {
-        console.log("LISTENIN ON PORT 8000")
+        console.log(`LISTENING ON PORT ${app.get("port")}`)
     });
 
 

@@ -1,8 +1,4 @@
-let IS_PROD = true;
-const server = IS_PROD ?
-    "https://quickmeet-75l2.onrender.com":
-
-    "http://localhost:8000"
+const server = process.env.REACT_APP_SERVER_URL || "http://localhost:5002";
 
 
 export default server;

@@ -13,7 +13,7 @@ Notes to speak: emphasize permissions handling, signaling flow, and trade-offs (
 
 ---
 
-## Slide 2 — Architecture & Talking Points
+## Slide 2 — Architecture & Talking Pointsavc
 
 - Architecture (short): Browser (getUserMedia) → Signaling Server (socket.io) → Peer RTCPeerConnection → direct media exchange
 - Challenges: NAT traversal (TURN), secure context (HTTPS), scalability (SFU)

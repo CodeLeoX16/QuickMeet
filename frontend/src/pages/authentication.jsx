@@ -45,6 +45,9 @@ export default function Authentication() {
       }
       if (formState === 1) {
         let result = await handleRegister(name, username, password);
+        if (!result) {
+          throw new Error("Registration failed");
+        }
         setUsername("");
         setMessage(result);
         setOpen(true);
@@ -53,7 +56,7 @@ export default function Authentication() {
         setPassword("");
       }
     } catch (err) {
-      let message = (err.response.data.message);
+      let message = err.response?.data?.message || "Unable to reach the server. Check that the backend is running.";
       setError(message);
     }
   }

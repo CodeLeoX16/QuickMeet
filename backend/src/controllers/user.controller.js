@@ -7,13 +7,17 @@ import { Meeting } from "../models/meeting.model.js";
 const login = async (req, res) => {
 
     const { username, password } = req.body;
+    const normalizedUsername = typeof username === "string" ? username.trim().toLowerCase() : "";
 
-    if (!username || !password) {
+    if (!normalizedUsername || !password) {
         return res.status(400).json({ message: "Please Provide" })
     }
 
     try {
-        const user = await User.findOne({ username });    
+        const escapedUsername = normalizedUsername.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const user = await User.findOne({
+            username: { $regex: `^\\s*${escapedUsername}\\s*$`, $options: "i" }
+        });
         if (!user) {
             return res.status(httpStatus.NOT_FOUND).json({ message: "User Not Found" })
         }
@@ -39,10 +43,14 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
     const { name, username, password } = req.body;
+    const normalizedUsername = typeof username === "string" ? username.trim().toLowerCase() : "";
 
+    if (!name?.trim() || !normalizedUsername || !password) {
+        return res.status(400).json({ message: "Name, username, and password are required" });
+    }
 
     try {
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ username: normalizedUsername });
         if (existingUser) {
             return res.status(httpStatus.FOUND).json({ message: "User already exists" });
         }
@@ -50,8 +58,8 @@ const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
-            name: name,
-            username: username,
+            name: name.trim(),
+            username: normalizedUsername,
             password: hashedPassword
         });
 
@@ -60,7 +68,7 @@ const register = async (req, res) => {
         res.status(httpStatus.CREATED).json({ message: "User Registered" })
 
     } catch (e) {
-        res.json({ message: `Something went wrong ${e}` })
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: "Unable to register user" })
     }
 
 }
