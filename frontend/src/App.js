@@ -7,6 +7,7 @@ import VideoMeetComponent from './pages/VideoMeet';
 import HomeComponent from './pages/home';
 import History from './pages/history';
 import Navbar from './pages/Navbar';
+import GuestJoin from './pages/GuestJoin';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path='/' element={<LandingPage />} />
 
             <Route path='/auth' element={<Authentication />} />
+            <Route path='/guest' element={<GuestJoin />} />
 
             <Route path='/home' element={<HomeComponent />} />
             <Route path='/history' element={<History />} />

@@ -14,7 +14,7 @@ function HomeComponent() {
     let handleJoinVideoCall = async () => {
         if (!meetingCode.trim()) return;
         await addToUserHistory(meetingCode);
-        navigate(`/${meetingCode}`);
+        navigate(`/${encodeURIComponent(meetingCode.trim().toLowerCase())}`);
     };
 
     return (

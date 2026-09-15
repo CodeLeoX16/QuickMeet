@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import io from "socket.io-client";
+import { useNavigate } from 'react-router-dom';
 import { Badge, IconButton, TextField, Avatar, Paper, Box, Typography, Tooltip } from '@mui/material';
 import { Button } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -25,6 +26,7 @@ const peerConfigConnections = {
 }
 
 export default function VideoMeetComponent() {
+    const navigate = useNavigate();
     var socketRef = useRef();
     let socketIdRef = useRef();
     let localVideoref = useRef();
@@ -51,6 +53,7 @@ export default function VideoMeetComponent() {
 
     const videoRef = useRef([]);
     let [videos, setVideos] = useState([]);
+    const [connectionStatus, setConnectionStatus] = useState('connecting');
 
     useEffect(() => {
         if (typeof navigator === 'undefined' || typeof navigator.mediaDevices === 'undefined') {
@@ -120,7 +123,7 @@ export default function VideoMeetComponent() {
 
         for (let id in connections) {
             if (id === socketIdRef.current) continue;
-            try { connections[id].addStream(window.localStream) } catch (e) {}
+            window.localStream?.getTracks().forEach(track => connections[id].addTrack(track, window.localStream));
             connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
                     .then(() => socketRef.current.emit('signal', id, JSON.stringify({ 'sdp': connections[id].localDescription })))
@@ -151,7 +154,7 @@ export default function VideoMeetComponent() {
 
         for (let id in connections) {
             if (id === socketIdRef.current) continue;
-            connections[id].addStream(window.localStream);
+            window.localStream?.getTracks().forEach(track => connections[id].addTrack(track, window.localStream));
             connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
                     .then(() => socketRef.current.emit('signal', id, JSON.stringify({ 'sdp': connections[id].localDescription })))
@@ -196,10 +199,13 @@ export default function VideoMeetComponent() {
     let connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false });
         socketRef.current.on('signal', gotMessageFromServer);
+        socketRef.current.on('connect_error', () => setConnectionStatus('error'));
 
         socketRef.current.on('connect', () => {
-            socketRef.current.emit('join-call', window.location.href);
+            const roomId = decodeURIComponent(window.location.pathname).replace(/^\/+|\/+$/g, '').trim().toLowerCase();
+            socketRef.current.emit('join-call', roomId);
             socketIdRef.current = socketRef.current.id;
+            setConnectionStatus('connected');
 
             socketRef.current.on('chat-message', addMessage);
 
@@ -221,12 +227,14 @@ export default function VideoMeetComponent() {
                         }
                     }
 
-                    connections[socketListId].onaddstream = (event) => {
+                    connections[socketListId].ontrack = (event) => {
+                        const stream = event.streams[0];
+                        if (!stream) return;
                         let videoExists = videoRef.current.find(video => video.socketId === socketListId);
                         if (videoExists) {
                             setVideos(videos => {
                                 const updatedVideos = videos.map(video =>
-                                    video.socketId === socketListId ? { ...video, stream: event.stream } : video
+                                    video.socketId === socketListId ? { ...video, stream } : video
                                 );
                                 videoRef.current = updatedVideos;
                                 return updatedVideos;
@@ -234,7 +242,7 @@ export default function VideoMeetComponent() {
                         } else {
                             let newVideo = {
                                 socketId: socketListId,
-                                stream: event.stream,
+                                stream,
                                 autoplay: true,
                                 playsinline: true
                             };
@@ -246,15 +254,13 @@ export default function VideoMeetComponent() {
                         }
                     };
 
-                    if (window.localStream) {
-                        try { connections[socketListId].addStream(window.localStream) } catch (e) { }
-                    }
+                    window.localStream?.getTracks().forEach(track => connections[socketListId].addTrack(track, window.localStream));
                 })
 
                 if (id === socketIdRef.current) {
                     for (let id2 in connections) {
                         if (id2 === socketIdRef.current) continue;
-                        try { connections[id2].addStream(window.localStream) } catch (e) { }
+                        window.localStream?.getTracks().forEach(track => connections[id2].addTrack(track, window.localStream));
                         connections[id2].createOffer().then((description) => {
                             connections[id2].setLocalDescription(description)
                                 .then(() => socketRef.current.emit('signal', id2, JSON.stringify({ 'sdp': connections[id2].localDescription })))
@@ -294,7 +300,8 @@ export default function VideoMeetComponent() {
             let tracks = localVideoref.current.srcObject.getTracks();
             tracks.forEach(track => track.stop());
         } catch (e) { }
-        window.location.href = "/home";
+        socketRef.current?.disconnect();
+        navigate("/home", { replace: true });
     }
 
     const addMessage = (data, sender, socketIdSender) => {
@@ -372,8 +379,12 @@ export default function VideoMeetComponent() {
                         {videos.length === 0 ? (
                             // Waiting State for Single User
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', gap: 2 }}>
-                                <Typography variant="h6" sx={{ fontWeight: 600 }}>Waiting for others to join...</Typography>
-                                <Typography variant="body2" sx={{ opacity: 0.7 }}>Share your meeting code with participants.</Typography>
+                                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                    {connectionStatus === 'error' ? 'Unable to connect to the meeting server' : 'Waiting for others to join...'}
+                                </Typography>
+                                <Typography variant="body2" sx={{ opacity: 0.7 }}>
+                                    {connectionStatus === 'error' ? 'Check the deployed backend URL and Socket.io service.' : 'Share your meeting code with participants.'}
+                                </Typography>
                             </Box>
                         ) : (
                             // Dynamic Grid for Remote Participants

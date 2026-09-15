@@ -21,11 +21,13 @@ export const connectToSocket = (server) => {
         console.log("SOMETHING CONNECTED")
 
         socket.on("join-call", (path) => {
+            const room = String(path || "").replace(/^\/+|\/+$/g, "").trim().toLowerCase();
+            if (!room) return;
 
-            if (connections[path] === undefined) {
-                connections[path] = []
+            if (connections[room] === undefined) {
+                connections[room] = []
             }
-            connections[path].push(socket.id)
+            connections[room].push(socket.id)
 
             timeOnline[socket.id] = new Date();
 
@@ -33,14 +35,14 @@ export const connectToSocket = (server) => {
             //     io.to(elem)
             // })
 
-            for (let a = 0; a < connections[path].length; a++) {
-                io.to(connections[path][a]).emit("user-joined", socket.id, connections[path])
+            for (let a = 0; a < connections[room].length; a++) {
+                io.to(connections[room][a]).emit("user-joined", socket.id, connections[room])
             }
 
-            if (messages[path] !== undefined) {
-                for (let a = 0; a < messages[path].length; ++a) {
-                    io.to(socket.id).emit("chat-message", messages[path][a]['data'],
-                        messages[path][a]['sender'], messages[path][a]['socket-id-sender'])
+            if (messages[room] !== undefined) {
+                for (let a = 0; a < messages[room].length; ++a) {
+                    io.to(socket.id).emit("chat-message", messages[room][a]['data'],
+                        messages[room][a]['sender'], messages[room][a]['socket-id-sender'])
                 }
             }
 

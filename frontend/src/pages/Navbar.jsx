@@ -47,7 +47,7 @@ export default function Navbar() {
                 {!token ? (
                     // Guest / Unauthenticated Links
                     <>
-                        <p onClick={() => navigate("/aljk23")}>Join as Guest</p>
+                        <p onClick={() => navigate("/guest")}>Join as Guest</p>
                         <p onClick={() => navigate("/auth")}>Register</p>
                         <Button 
                             variant="contained" 
